@@ -14,12 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class MutantController {
 
-    private MutantService mutantService;
-
     @Autowired
-    public MutantController(MutantService mutantService){
-        this.mutantService = mutantService;
-    }
+    private MutantService mutantService;
 
     @PostMapping("/mutant")
     public ResponseEntity<Void> isMutant(@RequestBody DnaPojo dnaPojo) {

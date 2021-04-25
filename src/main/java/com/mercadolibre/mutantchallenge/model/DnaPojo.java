@@ -9,6 +9,14 @@ public class DnaPojo {
 
     private List<String> dna;
 
+    public DnaPojo() {
+        //Default constructor
+    }
+
+    public DnaPojo(List<String> dna) {
+        this.dna = dna;
+    }
+
     public List<String> getDna() {
         return dna;
     }

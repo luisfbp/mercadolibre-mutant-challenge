@@ -28,6 +28,7 @@ public class MutantService {
 
     /**
      * Gets the DNA matrix from a given {@link DnaPojo} and checks if there is more than one nitrogenous base of DNA.
+     *
      * @param dnaPojo Object to extract the dna from.
      * @return {@code true} if there is at least 2 nitrogenous base of DNA in the given matrix.
      */
@@ -37,9 +38,9 @@ public class MutantService {
         int countMutantDna = 0;
         for (int r = 0; r < dna.length; r++) {
             for (int c = 0; c < dna[r].length; c++) {
-                if (findMutantDna(dna, r, c, 0, dna[r][c])) {
+                if (findMutantDna(dna, r, c, dna[r][c])) {
                     countMutantDna += 1;
-                    if (countMutantDna > 1) {
+                    if (countMutantDna >= 2) {
                         return true;
                     }
                 }
@@ -48,20 +49,31 @@ public class MutantService {
         return false;
     }
 
-    public boolean findMutantDna(String[][] dna, int r, int c, int count, String letter) {
+    private boolean findMutantDna(String[][] dna, int r, int c, String letter) {
+
+        return findMutant(dna, r, c, 0, letter, Direction.RIGHT) ||
+                findMutant(dna, r, c, 0, letter, Direction.DOWN) ||
+                findMutant(dna, r, c, 0, letter, Direction.DIAGONAL_RIGHT_DOWN) ||
+                findMutant(dna, r, c, 0, letter, Direction.DIAGONAL_LEFT_DOWN);
+    }
+
+    /**
+     * Improve performance checking if for a given [column, row] there is need to validate the given direction.
+     *
+     * @param dna DNA matrix
+     * @param r current row
+     * @param c current column
+     * @param direction {@link Direction} to check.
+     * @return true if the current position at the matrix is valid for checking.
+     */
+    private boolean shouldValidate(String[][] dna, int r, int c, Direction direction) {
 
         int rightRemaining = dna[r].length - c;
         int downRemaining = dna.length - r;
 
+        // Check if the current row column is at the corner of the matrix
         if (rightRemaining < DNA_LENGTH && downRemaining < DNA_LENGTH) return false;
 
-        return (shouldTestDirection(rightRemaining, downRemaining, c, Direction.RIGHT) && findMutant(dna, r, c, count, letter, Direction.RIGHT)) ||
-               (shouldTestDirection(rightRemaining, downRemaining, c, Direction.DOWN) && findMutant(dna, r, c, count, letter, Direction.DOWN)) ||
-               (shouldTestDirection(rightRemaining, downRemaining, c, Direction.DIAGONAL_RIGHT_DOWN) && findMutant(dna, r, c, count, letter, Direction.DIAGONAL_RIGHT_DOWN)) ||
-               (shouldTestDirection(rightRemaining, downRemaining, c, Direction.DIAGONAL_LEFT_DOWN) && findMutant(dna, r, c, count, letter, Direction.DIAGONAL_LEFT_DOWN));
-    }
-
-    private boolean shouldTestDirection(int rightRemaining, int downRemaining, int c, Direction direction) {
         switch (direction) {
             case RIGHT:
                 return rightRemaining >= DNA_LENGTH;
@@ -79,20 +91,26 @@ public class MutantService {
     /**
      * Recursive method to go over the dna matrix and find repeated letters consecutively in different {@link Direction}s.
      *
-     * @param dna DNA matrix.
-     * @param r Row index.
-     * @param c Column index.
-     * @param count Times of repeated letters consecutively.
-     * @param letter Current letter to check.
+     * @param dna       DNA matrix.
+     * @param r         Row index.
+     * @param c         Column index.
+     * @param count     Times of repeated letters consecutively.
+     * @param letter    Current letter to check.
      * @param direction Direction to follow when going over the matrix.
      * @return {@code true} if finds a letter repeated letters consecutively more than {@link MutantService#DNA_LENGTH}
      */
     private boolean findMutant(String[][] dna, int r, int c, int count, String letter, Direction direction) {
+
         if (count == DNA_LENGTH) {
             return true;
         }
 
-        if (r < 0 || r >= dna.length || c < 0 || c >= dna[r].length || !letter.equals(dna[r][c])) {
+        if (r >= dna.length || c < 0 || c >= dna[r].length || !letter.equals(dna[r][c])) {
+            return false;
+        }
+
+        // Checks for performance improvements
+        if (count == 0 && !shouldValidate(dna, r, c, direction)) {
             return false;
         }
 
