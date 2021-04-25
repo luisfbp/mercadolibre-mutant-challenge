@@ -49,6 +49,15 @@ public class MutantService {
         return false;
     }
 
+    /**
+     * Goes through all possible directions searching for a mutant DNA.
+     *
+     * @param dna    DNA matrix.
+     * @param r      current row.
+     * @param c      current column.
+     * @param letter Current letter to check.
+     * @return {@code true} if finds at least one mutant DNA
+     */
     private boolean findMutantDna(String[][] dna, int r, int c, String letter) {
 
         return findMutant(dna, r, c, 0, letter, Direction.RIGHT) ||
@@ -60,11 +69,11 @@ public class MutantService {
     /**
      * Improve performance checking if for a given [column, row] there is need to validate the given direction.
      *
-     * @param dna DNA matrix
-     * @param r current row
-     * @param c current column
+     * @param dna       DNA matrix
+     * @param r         current row
+     * @param c         current column
      * @param direction {@link Direction} to check.
-     * @return true if the current position at the matrix is valid for checking.
+     * @return {@code true} if the current position at the matrix is valid for checking.
      */
     private boolean shouldValidate(String[][] dna, int r, int c, Direction direction) {
 
@@ -97,7 +106,7 @@ public class MutantService {
      * @param count     Times of repeated letters consecutively.
      * @param letter    Current letter to check.
      * @param direction Direction to follow when going over the matrix.
-     * @return {@code true} if finds a letter repeated letters consecutively more than {@link MutantService#DNA_LENGTH}
+     * @return {@code true} if finds a letter repeated letters consecutively more or equals to {@link MutantService#DNA_LENGTH}
      */
     private boolean findMutant(String[][] dna, int r, int c, int count, String letter, Direction direction) {
 
