@@ -1,4 +1,4 @@
-package com.mercadolibre.mutantchallenge.model;
+package com.mercadolibre.mutantchallenge.model.api;
 
 import java.util.List;
 

@@ -1,8 +1,12 @@
 package com.mercadolibre.mutantchallenge.service;
 
-import com.mercadolibre.mutantchallenge.model.DnaPojo;
+import com.mercadolibre.mutantchallenge.dao.DnaDao;
+import com.mercadolibre.mutantchallenge.model.api.DnaPojo;
+import com.mercadolibre.mutantchallenge.model.db.Dna;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -15,6 +19,13 @@ public class MutantService {
      * Max DNA length
      */
     private static final int DNA_LENGTH = 4;
+
+    private final DnaDao dnaDao;
+
+    @Autowired
+    public MutantService(DnaDao dnaDao) {
+        this.dnaDao = dnaDao;
+    }
 
     /**
      * Matrix possible directions
@@ -41,20 +52,26 @@ public class MutantService {
                 if (findMutantDna(dna, r, c, dna[r][c])) {
                     countMutantDna += 1;
                     if (countMutantDna >= 2) {
+                        saveDnaAsync(new Dna(dnaPojo.getDna(), Dna.Type.MUTANT));
                         return true;
                     }
                 }
             }
         }
+        saveDnaAsync(new Dna(dnaPojo.getDna(), Dna.Type.HUMAN));
         return false;
+    }
+
+    private void saveDnaAsync(Dna dna) {
+        CompletableFuture.runAsync(() -> dnaDao.save(dna));
     }
 
     /**
      * Goes through all possible directions searching for a mutant DNA.
      *
      * @param dna    DNA matrix.
-     * @param r      current row.
-     * @param c      current column.
+     * @param r      Current row.
+     * @param c      Current column.
      * @param letter Current letter to check.
      * @return {@code true} if finds at least one mutant DNA
      */

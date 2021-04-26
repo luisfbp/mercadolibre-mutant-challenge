@@ -1,9 +1,11 @@
 package com.mercadolibre.mutantchallenge.service;
 
-import com.mercadolibre.mutantchallenge.model.DnaPojo;
+import com.mercadolibre.mutantchallenge.dao.DnaDao;
+import com.mercadolibre.mutantchallenge.model.api.DnaPojo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +16,7 @@ public class MutantServiceTest {
 
     @BeforeEach
     public void setup() {
-        mutantService = new MutantService();
+        mutantService = new MutantService(Mockito.mock(DnaDao.class));
     }
 
     @Test

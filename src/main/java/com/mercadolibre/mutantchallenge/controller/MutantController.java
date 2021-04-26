@@ -1,6 +1,6 @@
 package com.mercadolibre.mutantchallenge.controller;
 
-import com.mercadolibre.mutantchallenge.model.DnaPojo;
+import com.mercadolibre.mutantchallenge.model.api.DnaPojo;
 import com.mercadolibre.mutantchallenge.service.MutantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
