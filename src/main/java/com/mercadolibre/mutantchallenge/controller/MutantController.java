@@ -1,6 +1,6 @@
 package com.mercadolibre.mutantchallenge.controller;
 
-import com.mercadolibre.mutantchallenge.model.api.DnaPojo;
+import com.mercadolibre.mutantchallenge.model.api.DnaPayload;
 import com.mercadolibre.mutantchallenge.service.MutantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +19,8 @@ public class MutantController {
     private MutantService mutantService;
 
     @PostMapping("/mutant")
-    public ResponseEntity<Void> isMutant(@RequestBody DnaPojo dnaPojo) {
-        return mutantService.isMutant(dnaPojo) ? ResponseEntity.ok().build() : ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    public ResponseEntity<Void> isMutant(@RequestBody DnaPayload dnaPayload) {
+        return mutantService.isMutant(dnaPayload) ? ResponseEntity.ok().build() : ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
 }

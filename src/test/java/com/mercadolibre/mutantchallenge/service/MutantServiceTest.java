@@ -1,7 +1,7 @@
 package com.mercadolibre.mutantchallenge.service;
 
-import com.mercadolibre.mutantchallenge.dao.DnaCustomRepository;
-import com.mercadolibre.mutantchallenge.model.api.DnaPojo;
+import com.mercadolibre.mutantchallenge.repository.DnaCustomRepository;
+import com.mercadolibre.mutantchallenge.model.api.DnaPayload;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ public class MutantServiceTest {
                 "TCACTG"
         );
 
-        Assertions.assertFalse(mutantService.isMutant(new DnaPojo(dna)));
+        Assertions.assertFalse(mutantService.isMutant(new DnaPayload(dna)));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class MutantServiceTest {
                 "TCACTG"
         );
 
-        Assertions.assertFalse(mutantService.isMutant(new DnaPojo(dna)));
+        Assertions.assertFalse(mutantService.isMutant(new DnaPayload(dna)));
     }
 
     @Test
@@ -61,7 +61,7 @@ public class MutantServiceTest {
                 "TCACTG"
         );
 
-        Assertions.assertTrue(mutantService.isMutant(new DnaPojo(dna)));
+        Assertions.assertTrue(mutantService.isMutant(new DnaPayload(dna)));
     }
 
     @Test
@@ -76,7 +76,7 @@ public class MutantServiceTest {
                 "TCAAAA"
         );
 
-        Assertions.assertTrue(mutantService.isMutant(new DnaPojo(dna)));
+        Assertions.assertTrue(mutantService.isMutant(new DnaPayload(dna)));
     }
 
     @Test
@@ -91,7 +91,7 @@ public class MutantServiceTest {
                 "TCATTG"
         );
 
-        Assertions.assertTrue(mutantService.isMutant(new DnaPojo(dna)));
+        Assertions.assertTrue(mutantService.isMutant(new DnaPayload(dna)));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class MutantServiceTest {
                 "TACCCC"
         );
 
-        Assertions.assertTrue(mutantService.isMutant(new DnaPojo(dna)));
+        Assertions.assertTrue(mutantService.isMutant(new DnaPayload(dna)));
     }
 
 }

@@ -5,15 +5,15 @@ import java.util.List;
 /**
  * Request pojo which carry DNA information.
  */
-public class DnaPojo {
+public class DnaPayload {
 
     private List<String> dna;
 
-    public DnaPojo() {
+    public DnaPayload() {
         //Default constructor
     }
 
-    public DnaPojo(List<String> dna) {
+    public DnaPayload(List<String> dna) {
         this.dna = dna;
     }
 

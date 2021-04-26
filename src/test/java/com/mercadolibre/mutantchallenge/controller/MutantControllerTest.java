@@ -29,7 +29,7 @@ public class MutantControllerTest {
     public void shouldReturnABadRequest() throws Exception {
         Mockito.when(mutantService.isMutant(Mockito.any())).thenReturn(false);
 
-        mockMvc.perform(post("/mutant").contentType(APPLICATION_JSON_UTF8).content(payload())).andExpect(status().isBadRequest());
+        mockMvc.perform(post("/mutant").contentType(APPLICATION_JSON_UTF8).content(payload())).andExpect(status().isForbidden());
     }
 
     @Test

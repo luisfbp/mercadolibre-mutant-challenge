@@ -1,7 +1,7 @@
 package com.mercadolibre.mutantchallenge.service;
 
-import com.mercadolibre.mutantchallenge.dao.DnaCustomRepository;
-import com.mercadolibre.mutantchallenge.model.api.DnaPojo;
+import com.mercadolibre.mutantchallenge.repository.DnaCustomRepository;
+import com.mercadolibre.mutantchallenge.model.api.DnaPayload;
 import com.mercadolibre.mutantchallenge.model.db.Dna;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,13 +38,13 @@ public class MutantService {
     }
 
     /**
-     * Gets the DNA matrix from a given {@link DnaPojo} and checks if there is more than one nitrogenous base of DNA.
+     * Gets the DNA matrix from a given {@link DnaPayload} and checks if there is more than one nitrogenous base of DNA.
      *
-     * @param dnaPojo Object to extract the dna from.
+     * @param dnaPayload Object to extract the dna from.
      * @return {@code true} if there is at least 2 nitrogenous base of DNA in the given matrix.
      */
-    public boolean isMutant(DnaPojo dnaPojo) {
-        String[][] dna = dnaPojo.getDna().stream().map(dnaRow -> dnaRow.split("")).collect(Collectors.toList()).toArray(String[][]::new);
+    public boolean isMutant(DnaPayload dnaPayload) {
+        String[][] dna = dnaPayload.getDna().stream().map(dnaRow -> dnaRow.split("")).collect(Collectors.toList()).toArray(String[][]::new);
 
         int countMutantDna = 0;
         for (int r = 0; r < dna.length; r++) {
@@ -52,13 +52,13 @@ public class MutantService {
                 if (findMutantDna(dna, r, c, dna[r][c])) {
                     countMutantDna += 1;
                     if (countMutantDna >= 2) {
-                        saveDnaAsync(new Dna(dnaPojo.getDna(), Dna.Type.MUTANT, dnaPojo.getDna().hashCode()));
+                        saveDnaAsync(new Dna(dnaPayload.getDna(), Dna.Type.MUTANT, dnaPayload.getDna().hashCode()));
                         return true;
                     }
                 }
             }
         }
-        saveDnaAsync(new Dna(dnaPojo.getDna(), Dna.Type.HUMAN, dnaPojo.getDna().hashCode()));
+        saveDnaAsync(new Dna(dnaPayload.getDna(), Dna.Type.HUMAN, dnaPayload.getDna().hashCode()));
         return false;
     }
 
