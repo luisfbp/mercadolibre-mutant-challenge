@@ -1,0 +1,9 @@
+server:
+  port: 5000
+spring:
+  logging:
+    level:
+      root: info
+  data:
+    mongodb:
+      uri: mongodb+srv://admin:${mongodbPass}@cluster0.6piog.mongodb.net/dnadatabase?retryWrites=true&w=majority
