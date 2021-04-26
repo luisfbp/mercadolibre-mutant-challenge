@@ -1,6 +1,6 @@
 package com.mercadolibre.mutantchallenge.service;
 
-import com.mercadolibre.mutantchallenge.dao.DnaDao;
+import com.mercadolibre.mutantchallenge.dao.DnaCustomRepository;
 import com.mercadolibre.mutantchallenge.model.api.DnaPojo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +16,7 @@ public class MutantServiceTest {
 
     @BeforeEach
     public void setup() {
-        mutantService = new MutantService(Mockito.mock(DnaDao.class));
+        mutantService = new MutantService(Mockito.mock(DnaCustomRepository.class));
     }
 
     @Test

@@ -1,15 +1,18 @@
 package com.mercadolibre.mutantchallenge.model.db;
 
-import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
+@Document(collection = "dnas")
 public class Dna {
 
-    @Id
-    public String id;
+    private List<String> dna;
 
-    public List<String> dna;
+    private int dnaHash;
+
+    @Indexed
     public Type type;
 
     public enum Type {
@@ -17,18 +20,18 @@ public class Dna {
         MUTANT
     }
 
-    public Dna(List<String> dna, Type type) {
+    public Dna(List<String> dna, Type type, int dnaHash) {
+        this.dnaHash = dnaHash;
         this.dna = dna;
         this.type = type;
     }
 
-
-    public String getId() {
-        return id;
+    public int getDnaHash() {
+        return dnaHash;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setDnaHash(int dnaHash) {
+        this.dnaHash = dnaHash;
     }
 
     public List<String> getDna() {
@@ -46,4 +49,5 @@ public class Dna {
     public void setType(Type type) {
         this.type = type;
     }
+
 }

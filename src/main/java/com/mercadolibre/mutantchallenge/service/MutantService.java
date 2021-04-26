@@ -1,6 +1,6 @@
 package com.mercadolibre.mutantchallenge.service;
 
-import com.mercadolibre.mutantchallenge.dao.DnaDao;
+import com.mercadolibre.mutantchallenge.dao.DnaCustomRepository;
 import com.mercadolibre.mutantchallenge.model.api.DnaPojo;
 import com.mercadolibre.mutantchallenge.model.db.Dna;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +20,11 @@ public class MutantService {
      */
     private static final int DNA_LENGTH = 4;
 
-    private final DnaDao dnaDao;
+    private final DnaCustomRepository dnaCustomRepository;
 
     @Autowired
-    public MutantService(DnaDao dnaDao) {
-        this.dnaDao = dnaDao;
+    public MutantService(DnaCustomRepository dnaCustomRepository) {
+        this.dnaCustomRepository = dnaCustomRepository;
     }
 
     /**
@@ -52,18 +52,22 @@ public class MutantService {
                 if (findMutantDna(dna, r, c, dna[r][c])) {
                     countMutantDna += 1;
                     if (countMutantDna >= 2) {
-                        saveDnaAsync(new Dna(dnaPojo.getDna(), Dna.Type.MUTANT));
+                        saveDnaAsync(new Dna(dnaPojo.getDna(), Dna.Type.MUTANT, dnaPojo.getDna().hashCode()));
                         return true;
                     }
                 }
             }
         }
-        saveDnaAsync(new Dna(dnaPojo.getDna(), Dna.Type.HUMAN));
+        saveDnaAsync(new Dna(dnaPojo.getDna(), Dna.Type.HUMAN, dnaPojo.getDna().hashCode()));
         return false;
     }
 
+    /**
+     * Save the given ADN into the data base async.
+     * @param dna
+     */
     private void saveDnaAsync(Dna dna) {
-        CompletableFuture.runAsync(() -> dnaDao.save(dna));
+        CompletableFuture.runAsync(() -> dnaCustomRepository.saveDna(dna));
     }
 
     /**
