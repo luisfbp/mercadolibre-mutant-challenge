@@ -15,7 +15,7 @@ public class StatsController {
     @Autowired
     private StatsService statsService;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<StatsResponse> getStats() {
         return ResponseEntity.ok(statsService.calculateStats());
     }

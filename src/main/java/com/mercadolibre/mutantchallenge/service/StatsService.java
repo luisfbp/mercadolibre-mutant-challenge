@@ -19,7 +19,7 @@ public class StatsService {
         StatsResponse statsResponse = customRepository.findSumResult();
 
         if (statsResponse != null ) {
-            statsResponse.setRatio((double) (statsResponse.getCountMutantDna() / statsResponse.getCountHumanDna()));
+            statsResponse.setRatio((double) statsResponse.getCountMutantDna() / statsResponse.getCountHumanDna());
         }
         return statsResponse;
     }

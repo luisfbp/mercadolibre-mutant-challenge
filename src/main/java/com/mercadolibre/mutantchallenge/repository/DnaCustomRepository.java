@@ -38,10 +38,10 @@ public class DnaCustomRepository {
     public StatsResponse findSumResult() {
 
         ConditionalOperators.Cond conditionalMutants = ConditionalOperators
-                .when(ComparisonOperators.valueOf("type").equalToValue("MUTANT")).then(1).otherwise(0);
+                .when(ComparisonOperators.valueOf("type").equalToValue(Dna.Type.MUTANT)).then(1).otherwise(0);
 
         ConditionalOperators.Cond conditionalHumans = ConditionalOperators
-                .when(ComparisonOperators.valueOf("type").equalToValue("HUMAN")).then(1).otherwise(0);
+                .when(ComparisonOperators.valueOf("type").equalToValue(Dna.Type.HUMAN)).then(1).otherwise(0);
 
         Aggregation aggregation = Aggregation.newAggregation(Aggregation.group()
                 .sum(conditionalMutants).as("countMutantDna")
