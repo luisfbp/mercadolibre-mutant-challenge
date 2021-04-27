@@ -14,7 +14,7 @@ Mercado Libre challenge. More details in the `Examen Mercadolibre  - Mutantes.pd
 ## Project Installation
 
 1. It is required to run MongoDB in your local listening at port 27017
-- To run Docker easily, run a Docker MongoDB container as shown below.
+- To run MongoDB in your local easily, run a Docker MongoDB container as shown below.
 ```shell
 docker pull mongo
 sudo docker run -it --rm --name mongo-container mongo
