@@ -4,6 +4,8 @@ import com.mercadolibre.mutantchallenge.exception.ApiThrowable;
 import com.mercadolibre.mutantchallenge.repository.DnaCustomRepository;
 import com.mercadolibre.mutantchallenge.model.api.DnaPayload;
 import com.mercadolibre.mutantchallenge.model.db.Dna;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,7 @@ public class MutantService {
      */
     private static final int DNA_LENGTH = 4;
 
-    private static final String ALLOWED_LETTERS = "ATCG";
+    private static final Logger LOGGER = LoggerFactory.getLogger(MutantService.class);
 
     private final DnaCustomRepository dnaCustomRepository;
 
@@ -56,9 +58,6 @@ public class MutantService {
         int countMutantDna = 0;
         for (int r = 0; r < dna.length; r++) {
             for (int c = 0; c < dna[r].length; c++) {
-                if (!ALLOWED_LETTERS.contains(dna[r][c])) {
-                    throw new ApiThrowable("The matrix can only contain the letters A T C and G.", HttpStatus.BAD_REQUEST);
-                }
                 if (findMutantDna(dna, r, c, dna[r][c])) {
                     countMutantDna += 1;
                     if (countMutantDna >= 2) {
@@ -72,16 +71,30 @@ public class MutantService {
         return false;
     }
 
+    /**
+     * Checks if the size and letters in the matrix are correct.
+     * @param dnaMatrix DNA matrix to check.
+     */
     private void validateMatrix(List<String> dnaMatrix) {
-        boolean isNoSquareMatrix = dnaMatrix.stream().anyMatch(dnaChain -> dnaMatrix.size() != dnaChain.length());
-        if (isNoSquareMatrix) {
-            throw new ApiThrowable("DNA matrix must be square.", HttpStatus.BAD_REQUEST);
-        }
+        dnaMatrix.forEach(dnaChain -> {
+            if (dnaMatrix.size() != dnaChain.length()) {
+                String message = "DNA matrix must be square.";
+                LOGGER.warn(message);
+                throw new ApiThrowable(message, HttpStatus.BAD_REQUEST);
+            }
+            if (!dnaChain.matches("[ATCG]*")) {
+                String message = "The matrix can only contain the letters A T C and G.";
+                LOGGER.warn(message);
+                throw new ApiThrowable(message, HttpStatus.BAD_REQUEST);
+            }
+        });
+
+
     }
 
     /**
      * Save the given ADN into the data base async.
-     * @param dna
+     * @param dna dna to save.
      */
     private void saveDnaAsync(Dna dna) {
         CompletableFuture.runAsync(() -> dnaCustomRepository.saveDna(dna));
