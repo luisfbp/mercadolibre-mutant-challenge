@@ -1,5 +1,6 @@
 package com.mercadolibre.mutantchallenge.model.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,6 +19,9 @@ public class DnaPayload {
     }
 
     public List<String> getDna() {
+        if (dna == null) {
+            return new ArrayList<>();
+        }
         return dna;
     }
 

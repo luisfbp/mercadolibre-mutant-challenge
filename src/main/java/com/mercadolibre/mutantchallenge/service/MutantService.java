@@ -1,11 +1,14 @@
 package com.mercadolibre.mutantchallenge.service;
 
+import com.mercadolibre.mutantchallenge.exception.ApiThrowable;
 import com.mercadolibre.mutantchallenge.repository.DnaCustomRepository;
 import com.mercadolibre.mutantchallenge.model.api.DnaPayload;
 import com.mercadolibre.mutantchallenge.model.db.Dna;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -19,6 +22,8 @@ public class MutantService {
      * Max DNA length
      */
     private static final int DNA_LENGTH = 4;
+
+    private static final String ALLOWED_LETTERS = "ATCG";
 
     private final DnaCustomRepository dnaCustomRepository;
 
@@ -46,9 +51,14 @@ public class MutantService {
     public boolean isMutant(DnaPayload dnaPayload) {
         String[][] dna = dnaPayload.getDna().stream().map(dnaRow -> dnaRow.split("")).collect(Collectors.toList()).toArray(String[][]::new);
 
+        validateMatrix(dnaPayload.getDna());
+
         int countMutantDna = 0;
         for (int r = 0; r < dna.length; r++) {
             for (int c = 0; c < dna[r].length; c++) {
+                if (!ALLOWED_LETTERS.contains(dna[r][c])) {
+                    throw new ApiThrowable("The matrix can only contain the letters A T C and G.", HttpStatus.BAD_REQUEST);
+                }
                 if (findMutantDna(dna, r, c, dna[r][c])) {
                     countMutantDna += 1;
                     if (countMutantDna >= 2) {
@@ -60,6 +70,13 @@ public class MutantService {
         }
         saveDnaAsync(new Dna(dnaPayload.getDna(), Dna.Type.HUMAN, dnaPayload.getDna().hashCode()));
         return false;
+    }
+
+    private void validateMatrix(List<String> dnaMatrix) {
+        boolean isNoSquareMatrix = dnaMatrix.stream().anyMatch(dnaChain -> dnaMatrix.size() != dnaChain.length());
+        if (isNoSquareMatrix) {
+            throw new ApiThrowable("DNA matrix must be square.", HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**

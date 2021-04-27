@@ -1,11 +1,14 @@
 package com.mercadolibre.mutantchallenge.service;
 
+import com.mercadolibre.mutantchallenge.exception.ApiThrowable;
 import com.mercadolibre.mutantchallenge.repository.DnaCustomRepository;
 import com.mercadolibre.mutantchallenge.model.api.DnaPayload;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.JUnitException;
 import org.mockito.Mockito;
+import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
 import java.util.List;
@@ -107,6 +110,40 @@ public class MutantServiceTest {
         );
 
         Assertions.assertTrue(mutantService.isMutant(new DnaPayload(dna)));
+    }
+
+    @Test
+    public void isMutantShouldFailWhenTheMatrixIsNotSquare() {
+
+        List<String> dna = Arrays.asList(
+                "ATACGA",
+                "CAATGC",
+                "TTGTTT",
+                "CGACGG",
+                "TCGA",
+                "TCACTG"
+        );
+
+        ApiThrowable apiThrowable = Assertions.assertThrows(ApiThrowable.class, () -> mutantService.isMutant(new DnaPayload(dna)));
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, apiThrowable.getHttpStatus());
+
+    }
+
+    @Test
+    public void isMutantShouldFailWhenThereIsNotAllowedLettersInTheMatrix() {
+
+        List<String> dna = Arrays.asList(
+                "ATACGA",
+                "CAATGC",
+                "TTGTTT",
+                "CGACGG",
+                "TCGAGG",
+                "TCACTZ"
+        );
+
+        ApiThrowable apiThrowable = Assertions.assertThrows(ApiThrowable.class, () -> mutantService.isMutant(new DnaPayload(dna)));
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, apiThrowable.getHttpStatus());
+
     }
 
 }
